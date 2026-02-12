@@ -47,6 +47,10 @@ if ! bashio::fs.directory_exists '/data/.claude'; then
 fi
 ln -sf /data/.claude /root/.claude
 
+# Persistent .claude.json (MCP configs, settings)
+touch /data/.claude.json
+ln -sf /data/.claude.json /root/.claude.json
+
 # Persistent bash history
 touch /data/.bash_history
 ln -sf /data/.bash_history /root/.bash_history

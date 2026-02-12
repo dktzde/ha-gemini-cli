@@ -1,3 +1,9 @@
+## 0.1.5
+
+### Bug fixes
+
+- Persist `~/.claude.json` across restarts (symlinked to `/data/.claude.json`)
+
 ## 0.1.4
 
 ### Bug fixes
