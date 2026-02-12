@@ -2,7 +2,7 @@
 name: hass-dev-docs
 description: "Home Assistant developer documentation. Use when the user asks about Home Assistant integrations, add-ons, architecture, APIs, entities, config flows, or any HA development topic. Also use when explicitly asked to update or search HA developer docs."
 argument-hint: "[update [user|developer|both]|index [user|developer|both]|search <query> [in user|developer]|stats|stop]"
-allowed-tools: Bash(python *), Bash(npx tsx *), Bash(curl *), Bash(cat .hass-docs-port), Bash(kill *), Task(hass-docs-search)
+allowed-tools: Bash(python *), Bash(pnpm *), Bash(curl *), Bash(cat .hass-docs-port), Bash(kill *), Task(hass-docs-search)
 ---
 
 # Home Assistant Developer Docs
@@ -19,7 +19,7 @@ The search service runs as a background HTTP process. Before any search or index
 # Check if service is running
 if ! curl -s http://localhost:$(cat .hass-docs-port 2>/dev/null)/health > /dev/null 2>&1; then
   # Start the service in the background
-  nohup npx tsx .claude/skills/hass-dev-docs/service/src/server.ts > /tmp/hass-docs-search.log 2>&1 &
+  nohup pnpm --dir .claude/skills/hass-dev-docs/service start > /tmp/hass-docs-search.log 2>&1 &
   # Wait for port file to appear (up to 30 seconds)
   for i in $(seq 1 30); do
     if [ -f .hass-docs-port ] && curl -s http://localhost:$(cat .hass-docs-port)/health > /dev/null 2>&1; then
@@ -163,7 +163,7 @@ When this skill is loaded to answer a question (not via explicit `/` command):
 1. **Start the service if needed**:
    ```bash
    if ! curl -s http://localhost:$(cat .hass-docs-port 2>/dev/null)/health > /dev/null 2>&1; then
-     nohup npx tsx .claude/skills/hass-dev-docs/service/src/server.ts > /tmp/hass-docs-search.log 2>&1 &
+     nohup pnpm --dir .claude/skills/hass-dev-docs/service start > /tmp/hass-docs-search.log 2>&1 &
      for i in $(seq 1 30); do
        if [ -f .hass-docs-port ] && curl -s http://localhost:$(cat .hass-docs-port)/health > /dev/null 2>&1; then
          break
@@ -191,7 +191,7 @@ When this skill is loaded to answer a question (not via explicit `/` command):
 Before using the search service, install dependencies:
 
 ```bash
-cd .claude/skills/hass-dev-docs/service && npm install
+cd .claude/skills/hass-dev-docs/service && pnpm install
 ```
 
 This installs:

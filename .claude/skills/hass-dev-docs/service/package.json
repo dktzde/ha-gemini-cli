@@ -4,9 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx src/server.ts",
-    "dev": "tsx watch src/server.ts"
+    "start": "pnpm exec tsx src/server.ts",
+    "dev": "pnpm exec tsx watch src/server.ts"
   },
+  "packageManager": "pnpm@10.28.1",
   "dependencies": {
     "@huggingface/transformers": "^3.0.0",
     "better-sqlite3": "^11.0.0",
