@@ -1,10 +1,10 @@
-import { getDb } from './db.js';
+import { getDb, isVecLoaded } from './db.js';
 import { embed, isEnabled as embeddingsEnabled } from './embeddings.js';
 import type { SearchResult } from './types.js';
 
 export async function semanticSearch(query: string, limit = 10, docSet?: string): Promise<SearchResult[]> {
-  if (!embeddingsEnabled()) {
-    // Fall back to keyword search when embeddings are disabled
+  if (!embeddingsEnabled() || !isVecLoaded()) {
+    // Fall back to keyword search when embeddings/vec are unavailable
     return keywordSearch(query, limit, docSet);
   }
 

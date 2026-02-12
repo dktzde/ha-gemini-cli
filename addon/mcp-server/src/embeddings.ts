@@ -1,18 +1,18 @@
-import { pipeline, env, type FeatureExtractionPipeline } from '@huggingface/transformers';
+// Lazy-load @huggingface/transformers to avoid loading onnxruntime-node
+// native bindings at import time. This allows build-index.ts to import
+// this module without onnxruntime being installed (build-time indexing
+// is keyword-only and never calls embed()).
 
 const MODELS_DIR = process.env.MODELS_DIR || '/data/models';
 const ENABLE_EMBEDDINGS = process.env.ENABLE_EMBEDDINGS === 'true';
 
-// Cache models locally
-env.cacheDir = MODELS_DIR;
-
 const MODEL_NAME = 'Xenova/all-MiniLM-L6-v2';
 
-let extractor: FeatureExtractionPipeline | null = null;
+let extractor: any = null;
 let loading = false;
 let ready = false;
 
-async function getExtractor(): Promise<FeatureExtractionPipeline> {
+async function getExtractor(): Promise<any> {
   if (extractor) return extractor;
   if (loading) {
     while (loading) {
@@ -23,10 +23,13 @@ async function getExtractor(): Promise<FeatureExtractionPipeline> {
 
   loading = true;
   try {
+    const { pipeline, env } = await import('@huggingface/transformers');
+    env.cacheDir = MODELS_DIR;
+
     console.error(`Loading embedding model ${MODEL_NAME}...`);
     extractor = await (pipeline as any)('feature-extraction', MODEL_NAME, {
       dtype: 'fp32',
-    }) as FeatureExtractionPipeline;
+    });
     ready = true;
     console.error('Embedding model loaded successfully.');
     return extractor;

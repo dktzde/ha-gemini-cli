@@ -1,3 +1,12 @@
+## 0.1.1
+
+### Bug fixes
+
+- Fix Docker build failures with native module loading
+- Make sqlite-vec loading conditional on ENABLE_EMBEDDINGS to avoid .so errors at build time
+- Use lazy dynamic import for @huggingface/transformers to prevent onnxruntime-node load at import time
+- Allow pnpm to build better-sqlite3 native bindings via onlyBuiltDependencies config
+
 ## 0.1.0
 
 ### Initial release

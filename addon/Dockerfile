@@ -7,7 +7,7 @@ ARG BUILD_FROM=ghcr.io/hassio-addons/base:20.0.1
 # Stage 1: Build MCP server and pre-index docs
 FROM node:22-alpine AS mcp-builder
 
-RUN apk add --no-cache git && \
+RUN apk add --no-cache git build-base python3 && \
     corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /build

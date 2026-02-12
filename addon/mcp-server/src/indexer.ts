@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import { glob } from 'glob';
 import { join, relative, dirname, resolve } from 'node:path';
-import { getDb } from './db.js';
+import { getDb, isVecLoaded } from './db.js';
 import { embed, isEnabled as embeddingsEnabled } from './embeddings.js';
 
 let indexingInProgress = false;
@@ -127,9 +127,11 @@ export async function indexDocSet(docSetPath: string, docSetName: string): Promi
       console.error(`[indexer] Removing ${deletedFiles.length} deleted files from index`);
       const deleteTransaction = db.transaction(() => {
         for (const file of deletedFiles) {
-          db.prepare(
-            'DELETE FROM chunk_embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE file_id = ?)',
-          ).run(file.id);
+          if (isVecLoaded()) {
+            db.prepare(
+              'DELETE FROM chunk_embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE file_id = ?)',
+            ).run(file.id);
+          }
           db.prepare('DELETE FROM links WHERE source_file = ?').run(file.file_path);
           db.prepare('DELETE FROM files WHERE id = ?').run(file.id);
         }
@@ -168,9 +170,11 @@ export async function indexDocSet(docSetPath: string, docSetName: string): Promi
 
       const writeTransaction = db.transaction(() => {
         if (existing) {
-          db.prepare(
-            'DELETE FROM chunk_embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE file_id = ?)',
-          ).run(existing.id);
+          if (isVecLoaded()) {
+            db.prepare(
+              'DELETE FROM chunk_embeddings WHERE chunk_id IN (SELECT id FROM chunks WHERE file_id = ?)',
+            ).run(existing.id);
+          }
           db.prepare('DELETE FROM links WHERE source_file = ?').run(filePath);
           db.prepare('DELETE FROM files WHERE id = ?').run(existing.id);
         }
