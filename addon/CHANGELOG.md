@@ -1,3 +1,10 @@
+## 0.1.3
+
+### Improvements
+
+- Model config is now a dropdown: default, sonnet, opus, haiku
+- Uses Claude Code short aliases that auto-resolve to latest model versions
+
 ## 0.1.2
 
 ### Bug fixes
