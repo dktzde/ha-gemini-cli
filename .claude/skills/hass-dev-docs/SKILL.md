@@ -1,7 +1,7 @@
 ---
 name: hass-dev-docs
 description: "Home Assistant developer documentation. Use when the user asks about Home Assistant integrations, add-ons, architecture, APIs, entities, config flows, or any HA development topic. Also use when explicitly asked to update or search HA developer docs."
-argument-hint: "[update|index|search <query>]"
+argument-hint: "[update|index|search <query>|stats|stop]"
 allowed-tools: Bash(python *), Bash(npx tsx *), Bash(curl *), Bash(cat .hass-docs-port), Bash(kill *), Task(hass-docs-search)
 ---
 
@@ -77,9 +77,48 @@ curl -s "http://localhost:$(cat .hass-docs-port)/stats"
 
 Search the HA developer docs for a specific topic.
 
-Ensure the search service is running (see above), then delegate to the `hass-docs-search` subagent with the search query and the port number from `.hass-docs-port`.
+**Always follow this workflow**:
+
+1. **Start the service if needed** (run the auto-start check from "Search Service" section above)
+2. **Delegate to the subagent**:
+   ```
+   Use Task tool with:
+   - subagent_type: hass-docs-search
+   - prompt: Search the Home Assistant developer documentation for "<user's query>". The search service is running on port $(cat .hass-docs-port).
+   ```
+
+The subagent will:
+- Use semantic search for natural language queries
+- Fall back to keyword search for specific terms
+- Read relevant files for full context
+- Return a comprehensive summary with file references
 
 Example: `/hass-dev-docs search config flow` will search for documentation about config flows using semantic search.
+
+### `/hass-dev-docs stats`
+
+Show search service statistics:
+
+```bash
+curl -s "http://localhost:$(cat .hass-docs-port)/stats" | python3 -m json.tool
+```
+
+Displays:
+- Total files indexed
+- Total chunks (by ## heading sections)
+- Total inter-document links
+- Indexing status
+- Embedding model readiness
+
+### `/hass-dev-docs stop`
+
+Stop the search service:
+
+```bash
+kill $(cat .hass-docs-pid)
+```
+
+The service will clean up port and PID files automatically.
 
 ### `/hass-dev-docs` (no arguments)
 
@@ -90,15 +129,53 @@ When invoked without arguments, check if `docs/hass-developer/CLAUDE.md` exists:
 ## Answering HA Questions
 
 When this skill is loaded to answer a question (not via explicit `/` command):
-1. Ensure the search service is running (see above)
-2. Delegate to `hass-docs-search` to find relevant documentation
-3. Use the search results to provide an accurate answer
-4. Reference specific doc files in your answer
 
-## Important
+1. **Start the service if needed**:
+   ```bash
+   if ! curl -s http://localhost:$(cat .hass-docs-port 2>/dev/null)/health > /dev/null 2>&1; then
+     nohup npx tsx .claude/skills/hass-dev-docs/service/src/server.ts > /tmp/hass-docs-search.log 2>&1 &
+     for i in $(seq 1 30); do
+       if [ -f .hass-docs-port ] && curl -s http://localhost:$(cat .hass-docs-port)/health > /dev/null 2>&1; then
+         break
+       fi
+       sleep 1
+     done
+   fi
+   ```
+
+2. **Delegate to `hass-docs-search`**:
+   ```
+   Use Task tool with subagent_type: hass-docs-search
+   Prompt: Search for relevant documentation about "<user's question>"
+   ```
+
+3. **Provide the answer** using the search results with specific file references
+
+**Important**: The subagent has access to semantic (vector) and keyword (FTS5) search. It will automatically:
+- Search with natural language understanding
+- Read relevant files for context
+- Return comprehensive summaries with code examples
+
+## Setup (First Time Only)
+
+Before using the search service, install dependencies:
+
+```bash
+cd .claude/skills/hass-dev-docs/service && npm install
+```
+
+This installs:
+- Express (HTTP server)
+- better-sqlite3 + sqlite-vec (database with vector search)
+- @huggingface/transformers (embedding model)
+- Supporting packages
+
+The service will auto-download the embedding model (~85MB) on first run and cache it in `service/data/models/`.
+
+## Important Notes
 
 - The docs are plain markdown files — no build step needed
 - The `CLAUDE.md` index has a one-line description per file for quick navigation
 - Always delegate searches to `hass-docs-search` to avoid bloating main context
-- The search service must be installed first: `cd .claude/skills/hass-dev-docs/service && npm install`
 - The update script handles everything via a staging directory — safe to re-run
+- Service data (DB, models, logs) is gitignored automatically
