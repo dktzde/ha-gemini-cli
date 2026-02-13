@@ -17,17 +17,7 @@ model=$(bashio::config 'model')
 yolo_mode=$(bashio::config 'yolo_mode')
 enable_embeddings=$(bashio::config 'enable_embeddings')
 
-# Validate API key
-if ! bashio::var.has_value "${api_key}"; then
-    bashio::log.fatal
-    bashio::log.fatal 'No API key configured!'
-    bashio::log.fatal 'Please set your Anthropic API key in the add-on configuration.'
-    bashio::log.fatal
-    bashio::exit.nok
-fi
-
 # --- Set environment variables for all services (s6 convention: one file per var) ---
-printf '%s' "${api_key}" > /var/run/s6/container_environment/ANTHROPIC_API_KEY
 printf '%s' "${enable_embeddings}" > /var/run/s6/container_environment/ENABLE_EMBEDDINGS
 printf '%s' "/opt/mcp-server/data/docs-search.db" > /var/run/s6/container_environment/DOCS_DB_PATH
 printf '%s' "/opt/docs" > /var/run/s6/container_environment/DOCS_PATH
@@ -35,7 +25,11 @@ printf '%s' "/data/models" > /var/run/s6/container_environment/MODELS_DIR
 
 # Write all config to /etc/profile.d/ so the entrypoint shell sees them
 {
-    echo "export ANTHROPIC_API_KEY=\"${api_key}\""
+    if bashio::var.has_value "${api_key}"; then
+        echo "export ANTHROPIC_API_KEY=\"${api_key}\""
+    else
+        bashio::log.info 'No API key configured — use /login in Claude Code to authenticate via subscription.'
+    fi
     echo "export SUPERVISOR_TOKEN=\"${SUPERVISOR_TOKEN}\""
     echo "export DISABLE_AUTOUPDATER=1"
     echo "export CLAUDE_MODEL=\"${model}\""

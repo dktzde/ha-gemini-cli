@@ -1,3 +1,9 @@
+## 0.1.8
+
+### Improvements
+
+- Make API key optional — leave blank and use `/login` in Claude Code to authenticate via subscription (Pro/Max)
+
 ## 0.1.7
 
 ### Bug fixes
