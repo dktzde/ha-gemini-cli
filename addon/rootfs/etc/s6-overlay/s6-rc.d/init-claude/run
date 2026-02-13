@@ -3,7 +3,6 @@
 # ==============================================================================
 # Claude Code Add-on: Environment setup
 # Sets up API key, CLAUDE.md, .mcp.json, persistent storage
-# Runs as root (s6 oneshot), sets up claude user environment
 # ==============================================================================
 declare api_key
 declare model
@@ -35,37 +34,64 @@ printf '%s' "/data/models" > /var/run/s6/container_environment/MODELS_DIR
     echo "export DISABLE_AUTOUPDATER=1"
     echo "export CLAUDE_MODEL=\"${model}\""
     echo "export CLAUDE_YOLO=\"${yolo_mode}\""
-    echo "export HOME=/home/claude"
 } > /etc/profile.d/claude.sh
 
-# --- Persistent storage (owned by claude user) ---
+# --- Persistent storage ---
 mkdir -p /data/.claude /data/models
 if [[ ! -f /data/.claude.json ]]; then
     echo '{}' > /data/.claude.json
 fi
 touch /data/.bash_history
 
-# Symlink persistent data into claude user home
-ln -sf /data/.claude /home/claude/.claude
-ln -sf /data/.claude.json /home/claude/.claude.json
-ln -sf /data/.bash_history /home/claude/.bash_history
+# Symlink persistent data into root home
+ln -sf /data/.claude /root/.claude
+ln -sf /data/.claude.json /root/.claude.json
+ln -sf /data/.bash_history /root/.bash_history
 
-# Symlink convenient paths into claude home
-ln -sf /homeassistant /home/claude/homeassistant
-ln -sf /share /home/claude/share
+# Symlink convenient paths
+ln -sf /homeassistant /root/homeassistant
+ln -sf /share /root/share
 
-# --- Set permissions for claude user ---
-# Own the persistent data
-chown -R claude:claude /data/.claude /data/.claude.json /data/.bash_history /data/models
-# Own the home directory
-chown -R claude:claude /home/claude
-# Write access to HA config, addon config, and share
-chown -R claude:claude /homeassistant /config /share 2>/dev/null || true
+# --- Generate managed settings (system-wide) ---
+mkdir -p /etc/claude-code
+
+# When yolo mode is enabled, use managed settings to allow all tools.
+# This works as root (unlike --dangerously-skip-permissions which blocks on root).
+if bashio::config.true 'yolo_mode'; then
+    bashio::log.info 'Yolo mode enabled — configuring auto-approve for all tools.'
+    cat > /etc/claude-code/managed-settings.json << 'SETTINGSEOF'
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Edit",
+      "Write",
+      "Read",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "NotebookEdit",
+      "TodoWrite",
+      "Task",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "SendMessage",
+      "TeamCreate",
+      "TeamDelete",
+      "AskUserQuestion"
+    ],
+    "deny": []
+  },
+  "permissions.defaultMode": "acceptEdits"
+}
+SETTINGSEOF
+else
+    echo '{}' > /etc/claude-code/managed-settings.json
+fi
 
 # --- Generate managed MCP config (system-wide, always loaded) ---
 bashio::log.info 'Generating MCP server configuration...'
-
-mkdir -p /etc/claude-code
 
 cat > /etc/claude-code/managed-mcp.json << MCPEOF
 {

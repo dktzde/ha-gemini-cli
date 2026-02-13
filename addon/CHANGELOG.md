@@ -1,3 +1,11 @@
+## 0.1.10
+
+### Bug fixes
+
+- Revert non-root user approach (would break HA file permissions)
+- Yolo mode now uses managed-settings.json to allow all tools instead of `--dangerously-skip-permissions` (which is blocked as root)
+- No chown/chmod on HA-mounted directories — permissions are untouched
+
 ## 0.1.9
 
 ### Bug fixes
