@@ -1,3 +1,12 @@
+## 0.1.6
+
+### Bug fixes
+
+- Compile MCP server TypeScript to JavaScript at build time instead of running via tsx at runtime
+- Fix corrupt `.claude.json` on first start (initialize with `{}` instead of empty file)
+- Remove npm from final image (no longer needed with binary installer)
+- Prune dev dependencies from final image for smaller size
+
 ## 0.1.5
 
 ### Bug fixes

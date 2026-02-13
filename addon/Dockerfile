@@ -26,12 +26,18 @@ RUN cd mcp-server && pnpm install --frozen-lockfile 2>/dev/null || pnpm install
 # Copy MCP server source
 COPY mcp-server/ ./mcp-server/
 
-# Build keyword-only index (no embedding model needed)
+# Build keyword-only index (needs tsx for TypeScript source)
 RUN cd mcp-server && \
     DOCS_DB_PATH=/build/mcp-server/data/docs-search.db \
     DOCS_PATH=/build/docs \
     ENABLE_EMBEDDINGS=false \
     node --import tsx src/build-index.ts
+
+# Compile TypeScript to JavaScript
+RUN cd mcp-server && pnpm run build
+
+# Prune dev dependencies (tsx, typescript, @types/*) from final output
+RUN cd mcp-server && pnpm prune --prod
 
 # Stage 2: Final add-on image
 # hadolint ignore=DL3006
@@ -51,7 +57,6 @@ RUN apk add --no-cache \
     libgcc \
     libstdc++ \
     nodejs \
-    npm \
     ripgrep \
     tmux \
     ttyd
@@ -63,8 +68,11 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 ENV PATH="/root/.local/bin:${PATH}" \
     DISABLE_AUTOUPDATER=1
 
-# Copy MCP server from builder (source + deps + pre-built DB)
-COPY --from=mcp-builder /build/mcp-server /opt/mcp-server
+# Copy MCP server from builder (compiled JS + prod deps + pre-built DB)
+COPY --from=mcp-builder /build/mcp-server/dist /opt/mcp-server/dist
+COPY --from=mcp-builder /build/mcp-server/node_modules /opt/mcp-server/node_modules
+COPY --from=mcp-builder /build/mcp-server/data /opt/mcp-server/data
+COPY --from=mcp-builder /build/mcp-server/package.json /opt/mcp-server/package.json
 
 # Copy docs
 COPY --from=mcp-builder /build/docs /opt/docs

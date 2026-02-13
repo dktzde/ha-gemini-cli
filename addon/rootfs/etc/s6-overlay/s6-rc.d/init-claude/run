@@ -48,7 +48,9 @@ fi
 ln -sf /data/.claude /root/.claude
 
 # Persistent .claude.json (MCP configs, settings)
-touch /data/.claude.json
+if [[ ! -f /data/.claude.json ]]; then
+    echo '{}' > /data/.claude.json
+fi
 ln -sf /data/.claude.json /root/.claude.json
 
 # Persistent bash history
@@ -65,7 +67,7 @@ cat > /etc/claude-code/managed-mcp.json << MCPEOF
   "mcpServers": {
     "home-assistant": {
       "command": "node",
-      "args": ["--import", "tsx", "/opt/mcp-server/src/index.ts"],
+      "args": ["/opt/mcp-server/dist/index.js"],
       "env": {
         "SUPERVISOR_TOKEN": "${SUPERVISOR_TOKEN}",
         "ENABLE_EMBEDDINGS": "${enable_embeddings}",
