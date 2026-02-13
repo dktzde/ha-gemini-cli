@@ -63,11 +63,15 @@ RUN apk add --no-cache \
     tmux \
     ttyd
 
-# Install Claude Code via official binary installer
-RUN curl -fsSL https://claude.ai/install.sh | bash
+# Create non-root user for Claude Code (yolo mode requires non-root)
+RUN addgroup -S claude && adduser -S -G claude -h /home/claude -s /bin/bash claude
+
+# Install Claude Code via official binary installer (as root, then make accessible)
+RUN curl -fsSL https://claude.ai/install.sh | bash \
+    && cp -r /root/.local/bin/* /usr/local/bin/ 2>/dev/null || true
 
 # Add Claude Code to PATH and disable auto-updater
-ENV PATH="/root/.local/bin:${PATH}" \
+ENV PATH="/usr/local/bin:/home/claude/.local/bin:${PATH}" \
     DISABLE_AUTOUPDATER=1
 
 # Copy MCP server from builder (compiled JS + prod deps + pre-built DB)

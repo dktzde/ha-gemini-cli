@@ -2,7 +2,7 @@
 # ==============================================================================
 # Claude Code Add-on: Claude entrypoint
 # Launches Claude Code with flags based on add-on configuration.
-# This runs inside tmux, spawned by ttyd.
+# This runs as the 'claude' user inside tmux, spawned by ttyd.
 # ==============================================================================
 set -e
 
@@ -24,9 +24,6 @@ fi
 if [[ "${CLAUDE_YOLO:-}" == "true" ]]; then
     CLAUDE_ARGS+=(--dangerously-skip-permissions)
 fi
-
-# Working directory
-cd /homeassistant 2>/dev/null || cd /root
 
 echo "Starting Claude Code..."
 echo "Working directory: $(pwd)"

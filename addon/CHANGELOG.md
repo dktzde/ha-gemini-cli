@@ -1,3 +1,11 @@
+## 0.1.9
+
+### Bug fixes
+
+- Fix yolo mode: run Claude Code as non-root `claude` user (required for `--dangerously-skip-permissions`)
+- Grant claude user write access to HA config, share, and addon config directories
+- Persistent data (`.claude/`, `.claude.json`, history) now owned by claude user
+
 ## 0.1.8
 
 ### Improvements
