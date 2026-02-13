@@ -1,3 +1,11 @@
+## 0.1.7
+
+### Bug fixes
+
+- Fix better-sqlite3 native module crash: use Alpine 3.23 with Node 24 in builder to match runtime environment
+- Fix yolo mode not working: write config to env vars in `/etc/profile.d/` instead of relying on bashio in tmux context
+- Simplify entrypoint to use env vars (`CLAUDE_MODEL`, `CLAUDE_YOLO`) instead of bashio calls
+
 ## 0.1.6
 
 ### Bug fixes

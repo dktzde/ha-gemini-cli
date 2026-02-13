@@ -33,11 +33,13 @@ printf '%s' "/opt/mcp-server/data/docs-search.db" > /var/run/s6/container_enviro
 printf '%s' "/opt/docs" > /var/run/s6/container_environment/DOCS_PATH
 printf '%s' "/data/models" > /var/run/s6/container_environment/MODELS_DIR
 
-# Also write to /etc/profile.d/ so the shell sees them
+# Write all config to /etc/profile.d/ so the entrypoint shell sees them
 {
     echo "export ANTHROPIC_API_KEY=\"${api_key}\""
     echo "export SUPERVISOR_TOKEN=\"${SUPERVISOR_TOKEN}\""
     echo "export DISABLE_AUTOUPDATER=1"
+    echo "export CLAUDE_MODEL=\"${model}\""
+    echo "export CLAUDE_YOLO=\"${yolo_mode}\""
 } > /etc/profile.d/claude.sh
 
 # --- Persistent storage ---

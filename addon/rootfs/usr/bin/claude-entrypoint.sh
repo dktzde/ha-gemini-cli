@@ -6,7 +6,7 @@
 # ==============================================================================
 set -e
 
-# Source environment
+# Source environment (written by init-claude)
 if [[ -f /etc/profile.d/claude.sh ]]; then
     # shellcheck source=/dev/null
     source /etc/profile.d/claude.sh
@@ -16,20 +16,13 @@ fi
 declare -a CLAUDE_ARGS=()
 
 # Model selection
-if [[ -n "${CLAUDE_MODEL:-}" ]]; then
+if [[ -n "${CLAUDE_MODEL:-}" && "${CLAUDE_MODEL}" != "default" ]]; then
     CLAUDE_ARGS+=(--model "${CLAUDE_MODEL}")
 fi
 
-# Read config for yolo mode and model using bashio if available
-if command -v bashio &>/dev/null; then
-    if bashio::config.true 'yolo_mode' 2>/dev/null; then
-        CLAUDE_ARGS+=(--dangerously-skip-permissions)
-    fi
-
-    model=$(bashio::config 'model' 2>/dev/null || true)
-    if [[ -n "${model}" && "${model}" != "default" ]]; then
-        CLAUDE_ARGS+=(--model "${model}")
-    fi
+# Yolo mode (dangerously skip permissions)
+if [[ "${CLAUDE_YOLO:-}" == "true" ]]; then
+    CLAUDE_ARGS+=(--dangerously-skip-permissions)
 fi
 
 # Working directory
