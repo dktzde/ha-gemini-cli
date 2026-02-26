@@ -1,15 +1,15 @@
 ---
-name: Claude Code
-version: 0.1.11
-slug: claude_code
+name: Gemini cli
+version: 0.1
+slug: gemini_cli
 description: AI coding assistant with full Home Assistant access
 startup: services
 ingress: true
 ingress_port: 0
 ingress_stream: true
 init: false
-panel_icon: mdi:robot
-panel_title: Claude Code
+panel_icon: mdi:xml
+panel_title: Gemini CLI
 arch:
   - aarch64
   - amd64
@@ -30,7 +30,7 @@ options:
   additional_packages: []
 schema:
   api_key: "password?"
-  model: "list(default|sonnet|opus|haiku)"
+  model: "list(default|flash|pro)"
   yolo_mode: bool
   enable_embeddings: bool
   additional_packages:
