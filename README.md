@@ -1,11 +1,11 @@
 # Gemini CLI for Home Assistant
 
-Be careful! Work in Process - not tested yet!
+Status: seems to work - login with personal google account seems to work. I will be happy for feedback.
 
 This is a fork of [https://github.com/dkmaker/hass-claude-code] I try to make it run with [Gemini CLI](http://geminicli.com)
 
 
-A Home Assistant add-on that runs [Claude Code](https://docs.anthropic.com/en/docs/claude-code) inside your HA instance with a web terminal, full API access, and a built-in MCP server providing structured tools for interacting with your smart home.
+A Home Assistant add-on that runs Gemini CLI inside your HA instance with a web terminal, full API access, and a built-in MCP server providing structured tools for interacting with your smart home.
 
 ## Features
 
