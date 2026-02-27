@@ -18,6 +18,9 @@ declare -a GEMINI_ARGS=()
 # Model selection
 if [[ -n "${GEMINI_MODEL:-}" && "${GEMINI_MODEL}" != "default" ]]; then
     GEMINI_ARGS+=(--model "${GEMINI_MODEL}")
+else
+    # If model is default, unset the env var so Gemini CLI doesn't try to use "default" as a model name
+    unset GEMINI_MODEL
 fi
 
 # Yolo mode is handled via managed-settings.json (permissions.allow all tools)

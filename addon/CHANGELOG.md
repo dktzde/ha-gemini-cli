@@ -1,3 +1,24 @@
+## 0.0.6
+
+### Changes
+
+- Change default model configuration from `default` to `auto` as per user request.
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
+## 0.0.5
+
+### Bug fixes
+
+- Fix "model default was not found" error by ensuring `GEMINI_MODEL` environment variable is unset when using default configuration.
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
+## 0.0.4
+
+### Bug fixes
+
+- Fix missing persistence for `.config` and `.local` directories, ensuring login state and preferences survive restarts.
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
 ## 0.0.3
 
 ### Bug fixes

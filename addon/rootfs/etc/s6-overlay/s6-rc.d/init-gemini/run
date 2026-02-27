@@ -37,7 +37,7 @@ printf '%s' "/data/models" > /var/run/s6/container_environment/MODELS_DIR
 } > /etc/profile.d/gemini.sh
 
 # --- Persistent storage ---
-mkdir -p /data/.gemini /data/models
+mkdir -p /data/.gemini /data/models /data/.config /data/.local
 if [[ ! -f /data/.gemini.json ]]; then
     echo '{}' > /data/.gemini.json
 fi
@@ -47,6 +47,8 @@ touch /data/.bash_history
 ln -sf /data/.gemini /root/.gemini
 ln -sf /data/.gemini.json /root/.gemini.json
 ln -sf /data/.bash_history /root/.bash_history
+ln -sf /data/.config /root/.config
+ln -sf /data/.local /root/.local
 
 # Symlink convenient paths
 ln -sf /homeassistant /root/homeassistant
