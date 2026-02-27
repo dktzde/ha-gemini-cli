@@ -1,3 +1,12 @@
+## 0.0.7
+
+### Bug fixes
+
+- Rename MCP server to `home-assistant` to match configuration and provide a more accurate name.
+- Add strict guidelines to the generated `GEMINI.md` to prevent the agent from using shell comments for "thinking out loud", which can cause confirmation prompts and session crashes in Gemini CLI.
+- Encourage the use of specialized MCP tools over raw shell commands for interacting with Home Assistant.
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
 ## 0.0.6
 
 ### Changes

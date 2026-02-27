@@ -1,5 +1,5 @@
 name: Gemini CLI
-version: 0.0.6
+version: 0.0.7
 slug: gemini_cli
 description: Google Gemini CLI with full Home Assistant access
 startup: services
