@@ -1,3 +1,10 @@
+## 0.0.3
+
+### Bug fixes
+
+- Fix `s6-rc-compile` error by removing leftover dependency on `init-claude` (which was renamed to `init-gemini`).
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
 ## 0.0.2
 
 ### Bug fixes
