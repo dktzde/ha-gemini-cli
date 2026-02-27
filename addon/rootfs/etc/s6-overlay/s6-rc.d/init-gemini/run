@@ -154,6 +154,13 @@ The `home-assistant` MCP server provides these tools:
 - `/share/` - Shared storage between add-ons
 - `/ssl/` - SSL certificates (read-only)
 - `/media/` - Media files (read-only)
+
+## Important Guidelines
+
+1. **DO NOT use the `Bash` tool to "think out loud" or record plans as shell comments.** This causes unnecessary confirmation prompts and can lead to session issues.
+2. **Always prefer MCP tools** over raw shell commands for interacting with Home Assistant.
+3. **Use `search_entities`** to find the exact entity IDs before calling services.
+4. If you need to search for entities by name or area, start with `search_entities`.
 EOF
 fi
 
