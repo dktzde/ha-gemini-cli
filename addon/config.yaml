@@ -1,10 +1,10 @@
 name: Gemini CLI
-version: 0.0.1
+version: 0.0.2
 slug: gemini_cli
 description: Google Gemini CLI with full Home Assistant access
 startup: services
 ingress: true
-ingress_port: 0
+ingress_port: 8099
 ingress_stream: true
 init: false
 panel_icon: mdi:google

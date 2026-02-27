@@ -1,3 +1,11 @@
+## 0.0.2
+
+### Bug fixes
+
+- Fix 502 Bad Gateway error on Ingress by setting a static `ingress_port` (8099) in `config.yaml`.
+- Clean up corrupted `gemini-entrypoint.sh` and `init-gemini/run` scripts (removed Claude Code leftovers and repetitions).
+- *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
+
 ## 0.0.1
 
 ### Changes

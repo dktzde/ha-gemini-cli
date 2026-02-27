@@ -1,7 +1,7 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# Claude Code Add-on: Optional embedding model download
+# Gemini CLI Add-on: Optional embedding model download
 # ==============================================================================
 declare enable_embeddings
 

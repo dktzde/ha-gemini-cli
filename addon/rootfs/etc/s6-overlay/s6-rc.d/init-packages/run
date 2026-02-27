@@ -1,7 +1,7 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# Claude Code Add-on: Install additional packages
+# Gemini CLI Add-on: Install additional packages
 # ==============================================================================
 
 if bashio::config.has_value 'additional_packages'; then
