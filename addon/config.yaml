@@ -1,14 +1,13 @@
----
 name: Gemini CLI
-version: 0.1
+version: 0.0.1
 slug: gemini_cli
-description: AI coding assistant with full Home Assistant access (Gemini CLI)
+description: Google Gemini CLI with full Home Assistant access
 startup: services
 ingress: true
 ingress_port: 0
 ingress_stream: true
 init: false
-panel_icon: mdi:xml
+panel_icon: mdi:google
 panel_title: Gemini CLI
 arch:
   - aarch64
@@ -30,7 +29,7 @@ options:
   additional_packages: []
 schema:
   api_key: "password?"
-  model: "list(default|flash|pro)"
+  model: "str"
   yolo_mode: bool
   enable_embeddings: bool
   additional_packages:

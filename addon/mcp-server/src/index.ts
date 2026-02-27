@@ -8,7 +8,7 @@ import { listAreas, searchDevices, getConfigEntries } from './ha-websocket.js';
 import { searchDocs, readDoc, getDocStats } from './docs-search.js';
 
 const server = new McpServer({
-  name: 'home-assistant',
+  name: 'home-assistant-mistral',
   version: '1.0.0',
 });
 

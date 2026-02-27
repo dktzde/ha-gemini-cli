@@ -1,34 +1,3 @@
-# Claude Code Add-on: ttyd web terminal
-# Runs ttyd → tmux → claude-entrypoint.sh
-# ==============================================================================
-declare -a options
-declare ingress_port
-
-bashio::log.info 'Starting the ttyd daemon...'
-
-# Set daemon debug level
-if bashio::debug; then
-    options+=(-d7)
-else
-    options+=(-d1)
-fi
-
-# Listen on all interfaces (Supervisor Ingress proxies to this container)
-options+=(-i 0.0.0.0)
-
-# Enable terminal input
-options+=(--writable)
-
-# Get assigned Ingress port
-ingress_port=$(bashio::addon.ingress_port)
-options+=(-p "${ingress_port}")
-
-# Change working directory
-cd /homeassistant || cd /root || bashio::exit.nok 'Unable to change working directory'
-
-# Run ttyd with tmux for session persistence
-exec ttyd "${options[@]}" tmux -u new -A -s claude /usr/bin/claude-entrypoint.sh
-=======
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
@@ -61,34 +30,4 @@ options+=(-p "${ingress_port}")
 cd /homeassistant || cd /root || bashio::exit.nok 'Unable to change working directory'
 
 # Run ttyd with tmux for session persistence
-exec ttyd "${options[@]}" tmux -u new -A -s gemini /usr/bin/gemini-entrypoint.sh==============================================================================
-# Claude Code Add-on: ttyd web terminal
-# Runs ttyd → tmux → claude-entrypoint.sh
-# ==============================================================================
-declare -a options
-declare ingress_port
-
-bashio::log.info 'Starting the ttyd daemon...'
-
-# Set daemon debug level
-if bashio::debug; then
-    options+=(-d7)
-else
-    options+=(-d1)
-fi
-
-# Listen on all interfaces (Supervisor Ingress proxies to this container)
-options+=(-i 0.0.0.0)
-
-# Enable terminal input
-options+=(--writable)
-
-# Get assigned Ingress port
-ingress_port=$(bashio::addon.ingress_port)
-options+=(-p "${ingress_port}")
-
-# Change working directory
-cd /homeassistant || cd /root || bashio::exit.nok 'Unable to change working directory'
-
-# Run ttyd with tmux for session persistence
-exec ttyd "${options[@]}" tmux -u new -A -s claude /usr/bin/claude-entrypoint.sh
+exec ttyd "${options[@]}" tmux -u new -A -s gemini /usr/bin/gemini-entrypoint.sh

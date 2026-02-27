@@ -15,6 +15,7 @@ RUN apk add --no-cache nodejs npm git build-base python3 && \
 WORKDIR /build
 
 # Clone docs from the repository (same repo, just need the docs/ directory)
+# Using original repo for docs since local repo might not be pushed
 ARG DOCS_REPO=https://github.com/dkmaker/hass-claude-code.git
 ARG DOCS_REF=main
 RUN git clone --depth 1 --branch "${DOCS_REF}" "${DOCS_REPO}" /tmp/repo && \
@@ -59,12 +60,16 @@ RUN apk add --no-cache \
     libgcc \
     libstdc++ \
     nodejs \
+    npm \
     ripgrep \
     tmux \
     ttyd
 
 # Install Gemini CLI via npm
 RUN npm install -g @google/gemini-cli
+
+# Disable auto-updater for Gemini CLI if applicable (generic env var)
+ENV DISABLE_AUTOUPDATER=1
 
 # Copy MCP server from builder (compiled JS + prod deps + pre-built DB)
 COPY --from=mcp-builder /build/mcp-server/dist /opt/mcp-server/dist
