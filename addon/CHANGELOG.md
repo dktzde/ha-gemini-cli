@@ -24,6 +24,7 @@
 - Updated metadata to "Gemini CLI".
 - *Changes made by Gemini CLI (Model: Gemini 2.0 Flash).*
 
+## This are the Changelog of Hass Claude Code
 ## 0.1.11
 
 ### Improvements
