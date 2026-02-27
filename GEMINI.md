@@ -1,21 +1,21 @@
-# CLAUDE.md
+# GEMINI.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Gemini CLI when working with code in this repository.
 
 ## Project overview
 
-This repository provides Claude Code with Home Assistant documentation search capabilities. It contains:
+This repository provides Gemini CLI with Home Assistant documentation search capabilities. It contains:
 
 - **Local doc mirrors** of HA user and developer documentation (cleaned markdown)
 - **A semantic search service** for querying those docs via vector + keyword search
-- **Claude Code skills and agents** that wire everything together
+- **Gemini CLI skills and agents** that wire everything together
 
-The goal: when working on HA integrations in other repos, Claude Code can search these docs via the `hass-dev-docs` skill or `hass-docs-search` subagent.
+The goal: when working on HA integrations in other repos, Gemini CLI can search these docs via the `hass-dev-docs` skill or `hass-docs-search` subagent.
 
 ## Architecture
 
 ```
-.claude/
+.gemini/
   agents/
     hass-docs-search.md    # Haiku subagent — searches docs via the HTTP service
   skills/
@@ -53,10 +53,10 @@ TypeScript service running on Node.js via tsx. Key modules:
 
 ```bash
 # Install dependencies (first time)
-pnpm --dir .claude/skills/hass-dev-docs/service install
+pnpm --dir .gemini/skills/hass-dev-docs/service install
 
 # Start service (dynamic port written to .hass-docs-port)
-pnpm --dir .claude/skills/hass-dev-docs/service start
+pnpm --dir .gemini/skills/hass-dev-docs/service start
 
 # Stop service
 kill $(cat .hass-docs-pid)
@@ -66,10 +66,10 @@ kill $(cat .hass-docs-pid)
 
 ```bash
 # Developer docs
-python .claude/skills/hass-dev-docs/scripts/update-docs.py docs/hass-developer
+python .gemini/skills/hass-dev-docs/scripts/update-docs.py docs/hass-developer
 
 # User docs
-python .claude/skills/hass-dev-docs/scripts/update-user-docs.py docs/hass-user
+python .gemini/skills/hass-dev-docs/scripts/update-user-docs.py docs/hass-user
 ```
 
 ### Search API (when service is running)

@@ -3,4 +3,4 @@
 ### Test Release 
 
 - Fork of https://github.com/dkmaker/hass-claude-code
-- Changed everything to Gemini cli
+- Changed everything to Gemini CLI

@@ -63,7 +63,7 @@ RUN apk add --no-cache \
     tmux \
     ttyd
 
-# Install Google Gemini CLI via npm
+# Install Gemini CLI via npm
 RUN npm install -g @google/gemini-cli
 
 # Copy MCP server from builder (compiled JS + prod deps + pre-built DB)
@@ -79,7 +79,7 @@ COPY --from=mcp-builder /build/docs /opt/docs
 COPY rootfs /
 
 # Ensure scripts are executable
-RUN chmod a+x /usr/bin/claude-entrypoint.sh \
+RUN chmod a+x /usr/bin/gemini-entrypoint.sh \
     && find /etc/s6-overlay/s6-rc.d -name 'run' -exec chmod a+x {} \; \
     && find /etc/s6-overlay/s6-rc.d -name 'finish' -exec chmod a+x {} \;
 

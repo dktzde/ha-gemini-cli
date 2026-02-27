@@ -109,7 +109,7 @@ export async function indexDocSet(docSetPath: string, docSetName: string): Promi
 
     const files = await glob('**/*.md', {
       cwd: basePath,
-      ignore: ['**/CLAUDE.md', '**/CHANGELOG.md'],
+      ignore: ['**/GEMINI.md', '**/CHANGELOG.md'],
     });
 
     console.error(`[indexer] Found ${files.length} markdown files`);

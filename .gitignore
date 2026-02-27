@@ -1,8 +1,8 @@
 # Docs search service runtime data
-.claude/skills/hass-dev-docs/service/data/
-.claude/skills/hass-dev-docs/service/node_modules/
-.claude/skills/hass-dev-docs/service/package-lock.json
-.claude/skills/hass-dev-docs/service/pnpm-lock.yaml
+.gemini/skills/hass-dev-docs/service/data/
+.gemini/skills/hass-dev-docs/service/node_modules/
+.gemini/skills/hass-dev-docs/service/package-lock.json
+.gemini/skills/hass-dev-docs/service/pnpm-lock.yaml
 .hass-docs-port
 .hass-docs-pid
 

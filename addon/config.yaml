@@ -1,8 +1,8 @@
 ---
-name: Gemini cli
+name: Gemini CLI
 version: 0.1
 slug: gemini_cli
-description: AI coding assistant with full Home Assistant access
+description: AI coding assistant with full Home Assistant access (Gemini CLI)
 startup: services
 ingress: true
 ingress_port: 0
